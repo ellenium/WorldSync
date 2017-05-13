@@ -2,7 +2,17 @@ package io.grappl.worldsync;
 
 import java.util.UUID;
 
+/**
+ * The main class. This runs when the program starts.
+ */
 public class ServerSync {
+
+    public static void main(String[] args) {
+        /*
+            Create log
+            Start MainGUI
+         */
+    }
 
     // Class will use Grappl's authentication system, so need to rewrite all of that unless something comes up
 

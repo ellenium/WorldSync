@@ -9,6 +9,7 @@ public class CreateServerGUI {
      * - A dropdown that lets you select the minecraft server version that you want to use
      * - A button that lets you open another GUI that lets you add people to the server
      * - An advanced button that lets you edit more in-depth details about the server
+     * - Automatically transfer server to remote checkbox, will spawn prompt if the user does not have any credits to do so
      * - A button to create the server, and a button to cancel and go back
      */
 }
