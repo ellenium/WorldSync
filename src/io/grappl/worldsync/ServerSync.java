@@ -1,3 +1,5 @@
+package io.grappl.worldsync;
+
 import java.util.UUID;
 
 public class ServerSync {

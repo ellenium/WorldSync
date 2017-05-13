@@ -1,4 +1,4 @@
-package gui;
+package io.grappl.worldsync.gui;
 
 public class MainGUI {
 
@@ -18,16 +18,5 @@ public class MainGUI {
      *  A list of relevant details will be downloaded in a json format file, containing
      *  account data such as the servers associated with the account.
      *
-     *  A GUI will be spawned that contains a list of the servers that are associated with this
-     *  account.
-     *
-     *  There will be a number of server managment options:
-     *      - Create new server
-     *      - Update server
-     *      - Delete server
-     *      - Open server folder
-     *
-     *  There will also be a button the opens an account management prompt.
-     *  A logout button.
      */
 }

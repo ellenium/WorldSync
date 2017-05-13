@@ -1,3 +1,5 @@
+package io.grappl.worldsync;
+
 public class Utility {
 
     /**

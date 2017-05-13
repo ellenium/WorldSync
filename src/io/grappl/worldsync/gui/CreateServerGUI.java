@@ -1,4 +1,4 @@
-package gui;
+package io.grappl.worldsync.gui;
 
 public class CreateServerGUI {
 
