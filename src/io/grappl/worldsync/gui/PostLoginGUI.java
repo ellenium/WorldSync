@@ -1,5 +1,7 @@
 package io.grappl.worldsync.gui;
 
+import javax.swing.*;
+
 public class PostLoginGUI {
 
     /**

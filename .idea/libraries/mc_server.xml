@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="mc_server">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/AppData/Roaming/Grappl/WorldSync/servers/testServer/mc_server.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/AppData/Roaming/Grappl/WorldSync/servers/testServer/mc_server.jar!/" />
+    </SOURCES>
+  </library>
+</component>

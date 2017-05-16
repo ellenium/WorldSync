@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="GrapplClient">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/GrapplClient.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
