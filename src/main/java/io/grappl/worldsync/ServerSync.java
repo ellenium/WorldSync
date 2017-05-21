@@ -5,6 +5,7 @@ import io.grappl.client.api.Protocol;
 import io.grappl.client.impl.ApplicationState;
 import io.grappl.client.impl.GrapplBuilder;
 import io.grappl.client.impl.error.RelayServerNotFoundException;
+import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 import java.io.*;
@@ -45,28 +46,43 @@ public class ServerSync {
 
          */
 
+        System.out.println("---------------------------------------------");
+        System.out.println("---------------------------------------------");
+
         // Create folder
-        String dataFolder = Utility.getAppdataFolder() + "servers/";
-        String serverFolder = dataFolder + serverData.getServerName() + "/";
+        String dataFolder = Utility.getAppdataFolder() + "servers\\";
+        String serverFolder = dataFolder + serverData.getServerName() + "\\";
         File serverFolderFile = new File(serverFolder);
         serverFolderFile.mkdirs(); // Create all folders necessary to store the server
         boolean newServer = serverData.getBootTimes() == 0;
 
+        System.out.println("Directory of server: " + serverFolder);
+
         if(newServer) {
-            JOptionPane.showConfirmDialog(null, "To run the server, you must agree to Mojang's EULA. Do you?");
+            int reply = JOptionPane.showConfirmDialog(null, "To run the server, you must agree to Mojang's EULA. Do you?");
 
-            final String mcServerURL = "https://s3.amazonaws.com/Minecraft.Download/versions/1.11.2/minecraft_server.1.11.2.jar";
-            Utility.download(mcServerURL, serverFolder + "/mc_server.jar");
-            System.out.println("Jar downloaded");
+            if(reply == JOptionPane.YES_OPTION) {
+                File mcServerFile = new File(serverFolder + "/mc_server.jar");
 
-            File eulaText = new File(serverFolderFile + "/eula.txt");
-            try {
-                PrintStream eulaPrintStream = new PrintStream(new FileOutputStream(eulaText));
-                eulaPrintStream.println("eula=TRUE");
-                eulaPrintStream.flush();
-                eulaPrintStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                if(!mcServerFile.exists()) {
+                    final String mcServerURL = "https://s3.amazonaws.com/Minecraft.Download/versions/1.11.2/minecraft_server.1.11.2.jar";
+                    Utility.download(mcServerURL, "mc_server.jar");
+                    System.out.println("DOWNLOADER: Minecraft Server jar not found on disk- downloaded from AWS, version 1.11.2");
+                } else {
+                    System.out.println("DOWNLOADER: Server .jar found to be already present on disk. Not redownloading.");
+                }
+
+                File eulaText = new File(serverFolder + "/eula.txt");
+                try {
+                    PrintStream eulaPrintStream = new PrintStream(new FileOutputStream(eulaText));
+                    eulaPrintStream.println("eula=TRUE");
+                    eulaPrintStream.flush();
+                    eulaPrintStream.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "You cannot run the server without accepting.");
             }
         }
 
@@ -134,7 +150,7 @@ public class ServerSync {
         Grappl theGrappl = grapplBuilder.build();
         try {
             theGrappl.connect("n.grappl.io");
-            System.out.println("Connected to relay server, all ports opened, public at " + theGrappl.getExternalServer().toString());
+            System.out.println("GRAPPL: Connected to relay server, all ports opened, public at > " + theGrappl.getExternalServer().toString() + " < ");
         } catch (RelayServerNotFoundException e) {
             e.printStackTrace();
         }

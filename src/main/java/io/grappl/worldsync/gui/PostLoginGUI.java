@@ -102,7 +102,7 @@ public class PostLoginGUI {
             public void actionPerformed(ActionEvent e) {
 
                 String location = getSelectedServerFolder();
-                ServerSync.setUpServerLocally(new ServerData(location, UUID.randomUUID()));
+                ServerSync.setUpServerLocally(new ServerData(getActualName(), UUID.randomUUID()));
             }
         });
 
@@ -146,14 +146,25 @@ public class PostLoginGUI {
         PostLoginGUI postLoginGUI = new PostLoginGUI();
         File file = new File(Utility.getAppdataFolder() + "/servers/");
 
+        System.out.println("Looking for servers on disk...");
         for(File server : file.listFiles()) {
-            System.out.println("Autodected: " + server);
-            String[] name = server.getAbsolutePath().split("\\\\");
-            String actualName = name[name.length - 1];
-            System.out.println("Found: " + actualName);
-            ((DefaultListModel) postLoginGUI.serverList.getModel()).addElement(actualName);
+            try {
+                if(file.listFiles().length < 20)
+                    System.out.println("Found server: " + server);
+                String[] name = server.getAbsolutePath().split("\\\\");
+                String actualName = name[name.length - 1];
+                ((DefaultListModel) postLoginGUI.serverList.getModel()).addElement(actualName);
+            } catch (Exception e) {}
         }
+        if(file.listFiles().length >= 20) System.out.println("Too many found to list.");
+        System.out.println("Done.");
 
 
+    }
+
+    public String getActualName() {
+        String[] name = getSelectedServerFolder().split("\\\\");
+        String actualName = name[name.length - 1];
+        return actualName;
     }
 }
