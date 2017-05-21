@@ -2,7 +2,6 @@ package io.grappl.worldsync.gui;
 import io.grappl.worldsync.ServerData;
 import io.grappl.worldsync.ServerSync;
 import io.grappl.worldsync.Utility;
-import javafx.beans.property.adapter.JavaBeanObjectProperty;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
@@ -40,7 +39,6 @@ public class PostLoginGUI {
         theGUI.setLocationRelativeTo(null);
 
         serverList = new JList<String>(new DefaultListModel<String>());
-        ((DefaultListModel) serverList.getModel()).addElement("testServer");
         JScrollPane scrollPane = new JScrollPane(serverList);
         scrollPane.setBounds(20, 20, 350, 100);
         theGUI.add(scrollPane);
