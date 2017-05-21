@@ -73,8 +73,8 @@ public class PostLoginGUI {
         final int buttonDivide = buttonWidth + buttonGap;
         final int buttonDivideY = buttonHeight + buttonGap;
 
-        createServerButton.setBounds(startX, startY, buttonWidth, buttonHeight);
-        updateServerButton.setBounds(startX + buttonDivide, startY, buttonWidth, buttonHeight);
+        updateServerButton.setBounds(startX, startY, buttonWidth, buttonHeight);
+        createServerButton.setBounds(startX + buttonDivide, startY, buttonWidth, buttonHeight);
         deleteServerButton.setBounds(startX + (buttonDivide * 2), startY, buttonWidth, buttonHeight);
 
         openServerFolderButton.setBounds(startX, startY + buttonDivideY, buttonWidth, buttonHeight);
@@ -91,7 +91,7 @@ public class PostLoginGUI {
         createServerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = JOptionPane.showInputDialog("What is the name of this server?");
+                String name = JOptionPane.showInputDialog("What will be the name of this server?");
                 ServerSync.setUpServerLocally(new ServerData(name, UUID.randomUUID()));
                 ((DefaultListModel) serverList.getModel()).addElement(name);
             }
