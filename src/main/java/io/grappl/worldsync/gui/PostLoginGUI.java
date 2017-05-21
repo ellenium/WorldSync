@@ -2,6 +2,8 @@ package io.grappl.worldsync.gui;
 import io.grappl.worldsync.ServerData;
 import io.grappl.worldsync.ServerSync;
 import io.grappl.worldsync.Utility;
+import javafx.beans.property.adapter.JavaBeanObjectProperty;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,7 +111,18 @@ public class PostLoginGUI {
         deleteServerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showConfirmDialog(null, "Actually delete server?");
+                int reply = JOptionPane.showConfirmDialog(null, "Actually delete server?");
+
+                if(reply == JOptionPane.YES_OPTION) {
+                    try {
+                        FileUtils.deleteDirectory(new File(getSelectedServerFolder()));
+                        ((DefaultListModel) serverList.getModel()).removeElement(getActualName());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Server not deleted. Whew.");
+                }
             }
         });
 
