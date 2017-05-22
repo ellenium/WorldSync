@@ -16,6 +16,8 @@ import java.util.UUID;
  */
 public class ServerSync {
 
+    public static final String APP_NAME = "WorldSync";
+
     public static void main(String[] args) {
         /*
             Create log

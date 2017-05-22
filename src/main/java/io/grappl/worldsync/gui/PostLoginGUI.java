@@ -1,4 +1,5 @@
 package io.grappl.worldsync.gui;
+import com.sun.security.ntlm.Server;
 import io.grappl.worldsync.ServerData;
 import io.grappl.worldsync.ServerSync;
 import io.grappl.worldsync.Utility;
@@ -34,6 +35,7 @@ public class PostLoginGUI {
     public PostLoginGUI() {
         JFrame theGUI = new JFrame();
 
+        theGUI.setTitle(ServerSync.APP_NAME);
         theGUI.setLayout(null);
         theGUI.setSize(405, 270);
         theGUI.setLocationRelativeTo(null);
