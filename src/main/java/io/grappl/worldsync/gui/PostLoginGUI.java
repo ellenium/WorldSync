@@ -19,7 +19,7 @@ public class PostLoginGUI {
      *  A GUI will be spawned that contains a list of the servers that are associated with this
      *  account.
      *
-     *  There will be a number of server managment options:
+     *  There will be a number of server management options:
      *      - Create new server (CreateServerGUI)
      *      - Update server (UpdateServerGUI)
      *      - Delete server (Are you sure? prompt, followed by deletion, and delete server packet)
