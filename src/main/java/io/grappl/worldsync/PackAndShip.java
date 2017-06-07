@@ -1,7 +1,5 @@
 package io.grappl.worldsync;
 
-import sun.misc.IOUtils;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.zip.ZipEntry;
