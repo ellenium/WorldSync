@@ -153,6 +153,12 @@ public class PostLoginGUI {
             }
         });
 
+        /*
+            Deletes the server's files on the filesystem, and
+            sends a request to the core server telling it to delete
+            everything related to the server there.
+            (Doesn't do anything but delete stuff on the filesystem yet.)
+         */
         deleteServerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -171,6 +177,10 @@ public class PostLoginGUI {
             }
         });
 
+        /*
+            Opens the folder containing the server's files
+            on the filesystem.
+         */
         openServerFolderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -184,10 +194,15 @@ public class PostLoginGUI {
             }
         });
 
+        /*
+            Causes the UserUpdateGUI to appear in front of this GUI,
+            so that the user closes the UserUpdateGUI, this one will
+            be right there without having to re-open.
+         */
         userUpdateGUIButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: make this do something
+                new UserUpdateGUI();
             }
         });
 
