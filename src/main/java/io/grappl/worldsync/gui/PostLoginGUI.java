@@ -38,7 +38,7 @@ public class PostLoginGUI {
 
         theGUI.setTitle(ServerSync.APP_NAME);
         theGUI.setLayout(null);
-        theGUI.setSize(405, 270);
+        theGUI.setSize(405, 290); // FOrmerly 270
         theGUI.setLocationRelativeTo(null);
 
         serverList = new JList<String>(new DefaultListModel<String>());
@@ -61,23 +61,29 @@ public class PostLoginGUI {
     }
 
     public void populateButtons(JFrame window) {
-        JButton createServerButton = new JButton("Create Server");
-        JButton updateServerButton = new JButton("Run Server");
+        JButton createServerButton = new JButton("New Server");
+        JButton updateServerButton = new JButton("Update Server");
         JButton deleteServerButton = new JButton("Delete Server");
         JButton openServerFolderButton = new JButton("Server folder");
         JButton userUpdateGUIButton = new JButton("Account");
         JButton logoutButton = new JButton("Logout");
 
+        JButton startServer = new JButton("Start Server");
+        JButton stopServer = new JButton("Stop Server");
+
         final int startX = 5;
-        final int startY = 150;
+        final int startY = 170; // Formerly 150
         final int buttonWidth = 120;
         final int buttonHeight = 30;
         final int buttonGap = 10;
         final int buttonDivide = buttonWidth + buttonGap;
         final int buttonDivideY = buttonHeight + buttonGap;
 
-        updateServerButton.setBounds(startX, startY, buttonWidth, buttonHeight);
-        createServerButton.setBounds(startX + buttonDivide, startY, buttonWidth, buttonHeight);
+        startServer.setBounds(startX + buttonDivide/2, startY - (buttonDivideY), buttonWidth, buttonHeight);
+        stopServer.setBounds(startX + buttonDivide + buttonDivide/2, startY - buttonDivideY, buttonWidth, buttonHeight);
+
+        createServerButton.setBounds(startX, startY, buttonWidth, buttonHeight);
+        updateServerButton.setBounds(startX + buttonDivide, startY, buttonWidth, buttonHeight);
         deleteServerButton.setBounds(startX + (buttonDivide * 2), startY, buttonWidth, buttonHeight);
 
         openServerFolderButton.setBounds(startX, startY + buttonDivideY, buttonWidth, buttonHeight);
@@ -90,6 +96,8 @@ public class PostLoginGUI {
         window.add(openServerFolderButton);
         window.add(userUpdateGUIButton);
         window.add(logoutButton);
+        window.add(startServer);
+        window.add(stopServer);
 
         createServerButton.addActionListener(new ActionListener() {
             @Override
@@ -100,11 +108,9 @@ public class PostLoginGUI {
             }
         });
 
-        updateServerButton.addActionListener(new ActionListener() {
+        startServer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                String location = getSelectedServerFolder();
                 ServerSync.setUpServerLocally(new ServerData(getActualName(), UUID.randomUUID()));
             }
         });
