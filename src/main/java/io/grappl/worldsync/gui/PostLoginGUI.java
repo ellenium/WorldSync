@@ -191,10 +191,15 @@ public class PostLoginGUI {
             }
         });
 
+        /*
+            Closes this GUI, and sends the user back to the login GUI
+         */
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: make this do something
+                window.dispose();
+                // TODO: Send notice to the auth server that the user has logged out
+                new MainGUI();
             }
         });
     }
