@@ -33,10 +33,13 @@ public class PostLoginGUI {
 
     private JList<String> serverList;
 
-    public PostLoginGUI() {
+    public PostLoginGUI(String username) {
+        File serverFolder = new File(Utility.getAppdataFolder() + "/servers/");
+
+
         JFrame theGUI = new JFrame();
 
-        theGUI.setTitle(ServerSync.APP_NAME);
+        theGUI.setTitle(ServerSync.APP_NAME + " - Logged in as " + username);
         theGUI.setLayout(null);
         theGUI.setSize(405, 290); // FOrmerly 270
         theGUI.setLocationRelativeTo(null);
@@ -45,6 +48,42 @@ public class PostLoginGUI {
         JScrollPane scrollPane = new JScrollPane(serverList);
         scrollPane.setBounds(20, 20, 350, 100);
         theGUI.add(scrollPane);
+
+        /*
+            Assuming that every folder in the server directory is actually
+            a server, then this should provide an accurate count of the number
+            of servers present. Considering nothing else should be in here in
+            normal function and this number doesn't affect anything critical
+            to the program's operation, then this can be counted on as a
+            sufficiently accurate count.
+         */
+        int numberOfServers = serverFolder.listFiles().length;
+
+        System.out.println("Looking for servers on disk...");
+        for(File server : serverFolder.listFiles()) {
+            try {
+                // If there are less than 20 servers, print out the names of all.
+                if(numberOfServers < 20)
+                    System.out.println("Found server: " + server);
+
+                // Gets the name of the directory out of it's path
+                String[] name = server.getAbsolutePath().split("\\\\");
+                String actualName = name[name.length - 1];
+
+                // The directory name is the server name, and is added as an option in the GUI
+                ((DefaultListModel) serverList.getModel()).addElement(actualName);
+            } catch (Exception e) {}
+        }
+
+        /*
+            If there were more than 20 servers, we just need to tell the
+            user that there were a lot. To do otherwise would result
+            in console spam.
+         */
+        if(numberOfServers >= 20)
+            System.out.println("Too many found to list.");
+
+        System.out.println("Done.");
 
         populateButtons(theGUI);
 //        theGUI.pack();
@@ -165,45 +204,8 @@ public class PostLoginGUI {
 
     public static void main(String[] args) {
 
-        PostLoginGUI postLoginGUI = new PostLoginGUI();
+        PostLoginGUI postLoginGUI = new PostLoginGUI("Anonymous");
 
-        File serverFolder = new File(Utility.getAppdataFolder() + "/servers/");
-
-        /*
-            Assuming that every folder in the server directory is actually
-            a server, then this should provide an accurate count of the number
-            of servers present. Considering nothing else should be in here in
-            normal function and this number doesn't affect anything critical
-            to the program's operation, then this can be counted on as a
-            sufficiently accurate count.
-         */
-        int numberOfServers = serverFolder.listFiles().length;
-
-        System.out.println("Looking for servers on disk...");
-        for(File server : serverFolder.listFiles()) {
-            try {
-                // If there are less than 20 servers, print out the names of all.
-                if(numberOfServers < 20)
-                    System.out.println("Found server: " + server);
-
-                // Gets the name of the directory out of it's path
-                String[] name = server.getAbsolutePath().split("\\\\");
-                String actualName = name[name.length - 1];
-
-                // The directory name is the server name, and is added as an option in the GUI
-                ((DefaultListModel) postLoginGUI.serverList.getModel()).addElement(actualName);
-            } catch (Exception e) {}
-        }
-
-        /*
-            If there were more than 20 servers, we just need to tell the
-            user that there were a lot. To do otherwise would result
-            in console spam.
-         */
-        if(numberOfServers >= 20)
-            System.out.println("Too many found to list.");
-
-        System.out.println("Done.");
     }
 
     public String getActualName() {
