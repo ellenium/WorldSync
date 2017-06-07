@@ -1,6 +1,4 @@
 package io.grappl.worldsync.gui;
-import com.sun.security.ntlm.Server;
-import io.grappl.worldsync.PackAndShip;
 import io.grappl.worldsync.ServerData;
 import io.grappl.worldsync.ServerSync;
 import io.grappl.worldsync.Utility;
@@ -14,37 +12,42 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ *
+ *  A GUI will be spawned that contains a list of the servers that are associated with this
+ *  account.
+ *
+ *  There will be a number of server management options:
+ *      - Create new server (CreateServerGUI)
+ *      - Update server (UpdateServerGUI)
+ *      - Delete server (Are you sure? prompt, followed by deletion, and delete server packet)
+ *      - Open server folder (Opens the OS file explorer to the server data folder)
+ *
+ *  There will also be a button the opens an account management prompt. (UserUpdateGUI)
+ *  A logout button (logs out the user and goes back to MainGUI).
+ */
+
 public class PostLoginGUI {
 
     /**
-     *
-     *  A GUI will be spawned that contains a list of the servers that are associated with this
-     *  account.
-     *
-     *  There will be a number of server management options:
-     *      - Create new server (CreateServerGUI)
-     *      - Update server (UpdateServerGUI)
-     *      - Delete server (Are you sure? prompt, followed by deletion, and delete server packet)
-     *      - Open server folder (Opens the OS file explorer to the server data folder)
-     *
-     *  There will also be a button the opens an account management prompt. (UserUpdateGUI)
-     *  A logout button (logs out the user and goes back to MainGUI).
+     * The GUI element that lets the user scroll through all the
+     * servers that are associated with the logged in account.
+     * (At present, it just shows all the servers that are in
+     * in the local server directory on the disk.)
      */
-
     private JList<String> serverList;
 
-    public PostLoginGUI(String username) {
+    PostLoginGUI(final String username) { // TODO: Replace the "username" with some sort of auth object
         File serverFolder = new File(Utility.getAppdataFolder() + "/servers/");
-
 
         JFrame theGUI = new JFrame();
 
         theGUI.setTitle(ServerSync.APP_NAME + " - Logged in as " + username);
         theGUI.setLayout(null);
-        theGUI.setSize(405, 290); // FOrmerly 270
+        theGUI.setSize(405, 290); // Formerly 270
         theGUI.setLocationRelativeTo(null);
 
-        serverList = new JList<String>(new DefaultListModel<String>());
+        serverList = new JList<>(new DefaultListModel<>());
         JScrollPane scrollPane = new JScrollPane(serverList);
         scrollPane.setBounds(20, 20, 350, 100);
         theGUI.add(scrollPane);
@@ -83,30 +86,28 @@ public class PostLoginGUI {
         if(numberOfServers >= 20)
             System.out.println("Too many found to list.");
 
-        System.out.println("Done.");
+        System.out.println("Done searching for servers.");
 
         populateButtons(theGUI);
-//        theGUI.pack();
 
         theGUI.setVisible(true);
     }
 
-    public String getSelectedServer() {
+    private String getSelectedServer() {
         return ((DefaultListModel) serverList.getModel()).getElementAt(serverList.getSelectedIndex()).toString();
     }
 
-    public String getSelectedServerFolder() {
+    private String getSelectedServerFolder() {
         return Utility.getAppdataFolder() + "servers\\" + getSelectedServer() + "\\";
     }
 
-    public void populateButtons(JFrame window) {
+    private void populateButtons(JFrame window) {
         JButton createServerButton = new JButton("New Server");
         JButton updateServerButton = new JButton("Update Server");
         JButton deleteServerButton = new JButton("Delete Server");
         JButton openServerFolderButton = new JButton("Server folder");
         JButton userUpdateGUIButton = new JButton("Account");
         JButton logoutButton = new JButton("Logout");
-
         JButton startServer = new JButton("Start Server");
         JButton stopServer = new JButton("Stop Server");
 
@@ -120,11 +121,9 @@ public class PostLoginGUI {
 
         startServer.setBounds(startX + buttonDivide/2, startY - (buttonDivideY), buttonWidth, buttonHeight);
         stopServer.setBounds(startX + buttonDivide + buttonDivide/2, startY - buttonDivideY, buttonWidth, buttonHeight);
-
         createServerButton.setBounds(startX, startY, buttonWidth, buttonHeight);
         updateServerButton.setBounds(startX + buttonDivide, startY, buttonWidth, buttonHeight);
         deleteServerButton.setBounds(startX + (buttonDivide * 2), startY, buttonWidth, buttonHeight);
-
         openServerFolderButton.setBounds(startX, startY + buttonDivideY, buttonWidth, buttonHeight);
         userUpdateGUIButton.setBounds(startX + buttonDivide, startY + buttonDivideY, buttonWidth, buttonHeight);
         logoutButton.setBounds(startX + (buttonDivide * 2), startY + buttonDivideY, buttonWidth, buttonHeight);
@@ -150,27 +149,25 @@ public class PostLoginGUI {
         startServer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ServerSync.setUpServerLocally(new ServerData(getActualName(), UUID.randomUUID()));
+                ServerSync.setUpServerLocally(new ServerData(getActualNameOfSelectedServer(), UUID.randomUUID()));
             }
         });
 
         deleteServerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PackAndShip.pack(getSelectedServer());
-                PackAndShip.ship(new File(Utility.getAppdataFolder() + "/zips/"+getSelectedServer()+".zip"), getSelectedServer());
-//                int reply = JOptionPane.showConfirmDialog(null, "Actually delete server?");
-//
-//                if(reply == JOptionPane.YES_OPTION) {
-//                    try {
-//                        FileUtils.deleteDirectory(new File(getSelectedServerFolder()));
-//                        ((DefaultListModel) serverList.getModel()).removeElement(getActualName());
-//                    } catch (IOException e1) {
-//                        e1.printStackTrace();
-//                    }
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Server not deleted. Whew.");
-//                }
+                int reply = JOptionPane.showConfirmDialog(null, "Actually delete server?");
+
+                if(reply == JOptionPane.YES_OPTION) {
+                    try {
+                        FileUtils.deleteDirectory(new File(getSelectedServerFolder()));
+                        ((DefaultListModel) serverList.getModel()).removeElement(getActualNameOfSelectedServer());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Server not deleted. Whew.");
+                }
             }
         });
 
@@ -190,27 +187,25 @@ public class PostLoginGUI {
         userUpdateGUIButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                // TODO: make this do something
             }
         });
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                // TODO: make this do something
             }
         });
     }
 
-    public static void main(String[] args) {
-
-        PostLoginGUI postLoginGUI = new PostLoginGUI("Anonymous");
-
-    }
-
-    public String getActualName() {
+    /**
+     * Extract the actual name of a server from the path
+     * of it's folder.
+     * @return the actual name of the server
+     */
+    private String getActualNameOfSelectedServer() {
         String[] name = getSelectedServerFolder().split("\\\\");
-        String actualName = name[name.length - 1];
-        return actualName;
+        return name[name.length - 1];
     }
 }
