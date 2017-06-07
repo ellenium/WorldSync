@@ -76,12 +76,4 @@ public class MainGUI {
 
         mainFrame.setVisible(true);
     }
-
-    /**
-     * Method with which to launch the login GUI.
-     * This is temporary
-     */
-    public static void main(String[] args) {
-        new MainGUI();
-    }
 }

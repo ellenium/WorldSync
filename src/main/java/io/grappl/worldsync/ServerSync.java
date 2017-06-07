@@ -5,6 +5,7 @@ import io.grappl.client.api.Protocol;
 import io.grappl.client.impl.ApplicationState;
 import io.grappl.client.impl.GrapplBuilder;
 import io.grappl.client.impl.error.RelayServerNotFoundException;
+import io.grappl.worldsync.gui.MainGUI;
 import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
@@ -24,7 +25,8 @@ public class ServerSync {
             Start MainGUI
          */
 
-//        setUpServerLocally(new ServerData("testServer", UUID.randomUUID()));
+        // TODO: Create log
+        new MainGUI();
     }
 
     // Class will use Grappl's authentication system, so need to rewrite all of that unless something comes up
@@ -107,17 +109,6 @@ public class ServerSync {
             }
         }
 
-        else {
-
-        }
-
-        File mcServer = new File(serverFolder + "/mc_server.jar");
-//         Load server
-//        try {
-//            Runtime.getRuntime().exec(serverFolder +"/mc_server.jar");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         ProcessBuilder builder = new ProcessBuilder(
                 "cmd.exe", "/c", "cd " + serverFolder +" && java -jar mc_server.jar");
         builder.redirectErrorStream(true);
@@ -126,43 +117,6 @@ public class ServerSync {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        try {
-//            File file = new File(serverFolder + "/mc_server.jar");
-//            ClassLoader classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
-//            String mainClassLocation = "net.minecraft.server.MinecraftServer";
-//                Class theClass = classLoader.loadClass(mainClassLocation);
-//
-//                try {
-//                    final Method staticMain = theClass.getMethod("main", String[].class);
-//                    System.out.println("on. point.");
-//
-//                    System.out.println(staticMain.getName() + " " + staticMain.getGenericReturnType() + " " + staticMain.getParameterCount());
-//                    Thread serverThread = new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//
-//                            try {
-//                                String[] arguments = new String[]{"-nogui"};
-//                                staticMain.invoke(null, (Object) arguments);
-//                            } catch (IllegalAccessException e) {
-//                                e.printStackTrace();
-//                            } catch (InvocationTargetException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//                    });
-//                    serverThread.start();
-//
-////                    Object the = theClass.newInstance();
-////                    System.out.println("new instance");
-////                    Method m = theClass.newInstance().getClass().getMethod("main", new Class[0]);
-////                    System.out.println("method name: " + m.getName());
-////                    m.invoke(the, new Object[0]);
-//                } catch (Exception var13) {
-//                    var13.printStackTrace();
-//                }
-//        }catch (Exception e) {}
 
         final int serverPort = 25565;
 
