@@ -61,20 +61,39 @@ public class ServerSync {
         System.out.println("Directory of server: " + serverFolder);
 
         if(newServer) {
-            int reply = JOptionPane.showConfirmDialog(null, "To run the server, you must agree to Mojang's EULA. Do you?");
+            boolean check = true;
 
-            if(reply == JOptionPane.YES_OPTION) {
+            File eulaText = new File(serverFolder + "/eula.txt");
+            try {
+                FileInputStream fileInputStream = new FileInputStream(eulaText);
+                String input = new DataInputStream(fileInputStream).readLine();
+                String[] fork = input.split("\\=");
+                if(fork[1].equalsIgnoreCase("TRUE")) {
+                    check = false;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            int reply = -1;
+
+            if(check)
+                reply = JOptionPane.showConfirmDialog(null, "To run the server, you must agree to Mojang's EULA. Do you?");
+
+            if(!check || reply == JOptionPane.YES_OPTION) {
                 File mcServerFile = new File(serverFolder + "/mc_server.jar");
 
                 if(!mcServerFile.exists()) {
                     final String mcServerURL = "https://s3.amazonaws.com/Minecraft.Download/versions/1.11.2/minecraft_server.1.11.2.jar";
-                    Utility.download(mcServerURL, "mc_server.jar");
+                    Utility.download(mcServerURL, serverFolder+"mc_server.jar");
                     System.out.println("DOWNLOADER: Minecraft Server jar not found on disk- downloaded from AWS, version 1.11.2");
                 } else {
                     System.out.println("DOWNLOADER: Server .jar found to be already present on disk. Not redownloading.");
                 }
 
-                File eulaText = new File(serverFolder + "/eula.txt");
+//                File eulaText = new File(serverFolder + "/eula.txt");
                 try {
                     PrintStream eulaPrintStream = new PrintStream(new FileOutputStream(eulaText));
                     eulaPrintStream.println("eula=TRUE");
@@ -153,6 +172,7 @@ public class ServerSync {
         try {
             theGrappl.connect("n.grappl.io");
             System.out.println("GRAPPL: Connected to relay server, all ports opened, public at > " + theGrappl.getExternalServer().toString() + " < ");
+            JOptionPane.showMessageDialog(null, "Grappl connection open on: " + theGrappl.getExternalServer());
         } catch (RelayServerNotFoundException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package io.grappl.worldsync.gui;
 import com.sun.security.ntlm.Server;
+import io.grappl.worldsync.PackAndShip;
 import io.grappl.worldsync.ServerData;
 import io.grappl.worldsync.ServerSync;
 import io.grappl.worldsync.Utility;
@@ -111,18 +112,20 @@ public class PostLoginGUI {
         deleteServerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int reply = JOptionPane.showConfirmDialog(null, "Actually delete server?");
-
-                if(reply == JOptionPane.YES_OPTION) {
-                    try {
-                        FileUtils.deleteDirectory(new File(getSelectedServerFolder()));
-                        ((DefaultListModel) serverList.getModel()).removeElement(getActualName());
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Server not deleted. Whew.");
-                }
+                PackAndShip.pack(getSelectedServer());
+                PackAndShip.ship(new File(Utility.getAppdataFolder() + "/zips/"+getSelectedServer()+".zip"), getSelectedServer());
+//                int reply = JOptionPane.showConfirmDialog(null, "Actually delete server?");
+//
+//                if(reply == JOptionPane.YES_OPTION) {
+//                    try {
+//                        FileUtils.deleteDirectory(new File(getSelectedServerFolder()));
+//                        ((DefaultListModel) serverList.getModel()).removeElement(getActualName());
+//                    } catch (IOException e1) {
+//                        e1.printStackTrace();
+//                    }
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Server not deleted. Whew.");
+//                }
             }
         });
 
