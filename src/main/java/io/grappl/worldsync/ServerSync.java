@@ -134,42 +134,49 @@ public class ServerSync {
         } catch (RelayServerNotFoundException e) {
             e.printStackTrace();
         }
+        // Server object will send ServerUpdate messages to core to update the servers status on occasion
     }
-    // Server object will send ServerUpdate messages to core to update the servers status on occasion
 
-    public static void pack(String serverName) {
-        String dataFolder = Utility.getAppdataFolder() + "servers\\";
-        String serverFolder = dataFolder + serverName + "\\";
-
+    /**
+     * Takes the contents of a server's directory, and puts all
+     * of it into a .zip file insides of the /zips directory.
+     * This .zip file can then be used as a backup, and is generally
+     * sent to the core server where it can be sent to another computer
+     * or be unpacked and executed there.
+     * @param serverName the name of the server to be packed
+     * @return a File object reprsenting the .zip file everything was packed into
+     */
+    public static File packServerIntoZip(final String serverName) {
+        String serverFolder = Utility.getAppdataFolder() + "servers\\" + serverName + "\\";
         File theZip = new File(Utility.getAppdataFolder() + "zips\\" + serverName + ".zip");
 
         try {
             theZip.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(theZip));
-            recurse(serverFolder, "", zipOutputStream);
+            recursivelyAddToZip(serverFolder, "", zipOutputStream);
             zipOutputStream.flush();
             zipOutputStream.closeEntry();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return theZip;
     }
 
-    private static void recurse(String worldName, String name, ZipOutputStream zipOutputStream) {
-//        System.out.println("Checking: " + name);
-        File theFolder = new File(worldName + name);
+    /**
+     * Private method used exclusively by the 'packServerIntoZip' method.
+     * @param serverPath the pack of the server being packed
+     * @param filePath the path of the file being packed
+     * @param zipOutputStream the ZipOutputStream associated with the zip file
+     */
+    private static void recursivelyAddToZip(
+            final String serverPath, final String filePath, final ZipOutputStream zipOutputStream) {
+        File theFolder = new File(serverPath + filePath);
 
         if (theFolder.listFiles().length == 0) return;
 
         for (File f : theFolder.listFiles()) {
-            ZipEntry zipEntry = new ZipEntry(name + "" + f.getName());
+            ZipEntry zipEntry = new ZipEntry(filePath + "" + f.getName());
             try {
                 zipOutputStream.putNextEntry(zipEntry);
                 if (!f.isDirectory()) {
@@ -178,32 +185,37 @@ public class ServerSync {
                 }
                 zipOutputStream.flush();
                 zipOutputStream.closeEntry();
-                System.out.println("Put entry: " + (name + "" + f.getName()));
+                System.out.println("Put entry: " + (filePath + "" + f.getName()));
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             if (f.isDirectory()) {
-                recurse(worldName, name + f.getName() + "/", zipOutputStream);
+                recursivelyAddToZip(serverPath, filePath + f.getName() + "/", zipOutputStream);
             }
         }
     }
 
-    public static void ship(File zip, String name) {
-        System.out.println("uploading");
-        String ip = "localhost";
+    /**
+     * Uploads a .zip file to the core server.
+     * @param serverZip the .zip file to be uploaded
+     * @param serverName the name of the server that the .zip file contains the files of
+     */
+    public static void ship(final File serverZip, final String serverName) {
+        System.out.println("Uploading .zip");
+        String coreIP = "localhost";
         int port = 33233;
 
         try {
-            Socket socket = new Socket(ip, port);
+            Socket socket = new Socket(coreIP, port);
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeInt(1);
             PrintStream printStream = new PrintStream(dataOutputStream);
-            printStream.println(name);
+            printStream.println(serverName);
             dataOutputStream.flush();
             System.out.println("Name sent");
-            FileInputStream fileInputStream = new FileInputStream(zip);
+            FileInputStream fileInputStream = new FileInputStream(serverZip);
             org.apache.commons.io.IOUtils.copy(fileInputStream, socket.getOutputStream());
             socket.getOutputStream().flush();
             socket.close();
@@ -213,7 +225,12 @@ public class ServerSync {
         System.out.println("done");
     }
 
-    public static void retrieve(File zip, String name) {
+    /**
+     * Downloads a server's .zip from the core server.
+     * @param serverZip a .zip file containing the server's files
+     * @param serverName the name of the server
+     */
+    public static void retrieve(File serverZip, String serverName) {
         System.out.println("Retrieving");
         String ip = "localhost";
         int port = 33233;
@@ -223,9 +240,9 @@ public class ServerSync {
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeInt(2);
             PrintStream printStream = new PrintStream(dataOutputStream);
-            printStream.println(name);
+            printStream.println(serverName);
             System.out.println("Name sent");
-            FileOutputStream fileOutputStream = new FileOutputStream(zip);
+            FileOutputStream fileOutputStream = new FileOutputStream(serverZip);
             org.apache.commons.io.IOUtils.copy(socket.getInputStream(), fileOutputStream);
             fileOutputStream.flush();
             socket.close();
