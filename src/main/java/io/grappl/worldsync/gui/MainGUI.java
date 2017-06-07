@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
  *  - A password field
  *  - A login button
  *  - A signup button, that opens a link to the website
+ *  - A "Remember me" checkbox
  *
  *  And then that's literally it until the user logs in, after which point another GUI will
  *  be spawned, containing the primary options.
