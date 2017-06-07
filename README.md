@@ -1,4 +1,4 @@
-#WorldSync
+# WorldSync
 
 The aim of this program is threefold:
 
@@ -27,4 +27,4 @@ Currently, the clientside is more or less the only thing to really work in any c
 At current, it can download a minecraft server .jar from AWS, select that the user agrees to the EULA,
 and start the server. The user can create and delete servers from the GUI. Servers will automatically
 be able to be joined by external users since Grappl is already set up. However, none of the other
-functionality currently works.
+functionality currently works. It currently is useful as a tool to organize and manage servers.
